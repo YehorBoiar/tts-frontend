@@ -21,9 +21,9 @@ const Login = () => {
     const formData = new FormData();
     formData.append('username', username);
     formData.append('password', password);
-
+    const backendUrl = process.env.REACT_APP_BACKEND_URL;
     try {
-      const response = await fetch('http://38.242.213.102:8000/token', {
+      const response = await fetch(`${backendUrl}/token`, {
         method: 'POST',
         body: formData,
       });

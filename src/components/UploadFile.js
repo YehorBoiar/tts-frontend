@@ -25,9 +25,16 @@ const UploadFile = () => {
 
     const formData = new FormData();
     formData.append('file', file);
+    const backendUrl = process.env.REACT_APP_BACKEND_URL;
+
+    if (!backendUrl) {
+      setError("Backend URL is not defined");
+      setLoading(false);
+      return;
+    }
 
     try {
-      const response = await axios.post('http://127.0.0.1:8000/synthesize', formData, {
+      const response = await axios.post(`${backendUrl}/synthesize`, formData, {
         responseType: 'blob',
         headers: {
           'Content-Type': 'multipart/form-data',

@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 
 function Register() {
   const { register, handleSubmit, formState: { errors } } = useForm();
-  const backendUrl = 'http://38.242.213.102:8000';
+  const backendUrl = process.env.BACKEND_URL;
   const onSubmit = async (data) => {
     try {
       const response = await fetch(`${backendUrl}/register`, {

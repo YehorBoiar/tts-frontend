@@ -7,7 +7,7 @@ const Home = () => {
       <main className="flex flex-col items-center justify-center text-center flex-1">
         <h1 className="text-4xl font-bold mb-6">Make sound from pdf free no sms</h1>
         <div className="flex">
-        <Link to="/upload" className="mr-4">
+        <Link to="/dosound" className="mr-4">
           <button className="text-black hover:text-gray-600">
             Do sound
           </button>

@@ -4,6 +4,8 @@ import UpperBar from './components/UpperBar';
 import Signin from './pages/signin';
 import Register from './pages/register';
 import UploadFile from './components/UploadFile';
+import Home from './pages/home';
+import Dosound from './pages/dosound';
 
 function App() {
   return (
@@ -11,6 +13,8 @@ function App() {
       <div className="p-4">
         <UpperBar />
           <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/dosound" element={<Dosound />} />
             <Route path="/upload" element={<UploadFile />} />
             <Route path="/signin" element={<Signin />} />
             <Route path="/register" element={<Register />} />

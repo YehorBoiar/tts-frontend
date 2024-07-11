@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import UploadPdf from '../components/UploadPdf';
 import BookText from '../components/BookText';
 import PageSelector from '../components/PageSelector';
 import SidePanel from '../components/SidePanel';
+import AddBookButton from '../components/AddBookButton'; // Ensure correct import path
 
 const Dosound = () => {
   const [text, setText] = useState('');
@@ -15,15 +15,15 @@ const Dosound = () => {
 
   return (
     <div className="flex">
-      <SidePanel />
+      <SidePanel setText={setText}/>
       <div className="flex-1 p-4">
-        {!text && <UploadPdf setText={setText} />}
         {text && <BookText text={text} />}
         {text && (
           <div>
             <PageSelector totalPages={totalPages} onPageChange={handlePageChange} />
           </div>
         )}
+        <AddBookButton /> 
       </div>
     </div>
   );

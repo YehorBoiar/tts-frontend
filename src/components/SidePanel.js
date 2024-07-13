@@ -34,7 +34,7 @@ const SidePanel = ({ setText }) => {
           'Authorization': `Bearer ${cookie}`
         }
       });
-      setText(response.data.text);
+      setText(response.data.text, path);
     } catch (error) {
       console.error("There was an error fetching the book text:", error);
     }

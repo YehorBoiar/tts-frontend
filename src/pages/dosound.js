@@ -2,25 +2,27 @@ import React, { useState } from 'react';
 import BookText from '../components/BookText';
 import PageSelector from '../components/PageSelector';
 import SidePanel from '../components/SidePanel';
-import AddBookButton from '../components/AddBookButton'; // Ensure correct import path
+import AddBookButton from '../components/AddBookButton';
+import usePagesCount from '../hooks/usePagesCount';
 
 const Dosound = () => {
   const [text, setText] = useState('');
-  const totalPages = 3; // Example total pages, you can adjust this as needed
+  const [bookPath, setBookPath] = useState('');
+  const { totalPages } = usePagesCount(bookPath);
 
-  const handlePageChange = (page) => {
-    console.log('Selected page:', page);
-    // Implement the logic to display the text of the selected page
+  const handleBookSelected = (bookText, path) => {
+    setText(bookText);
+    setBookPath(path);
   };
 
   return (
     <div className="flex">
-      <SidePanel setText={setText}/>
+      <SidePanel setText={handleBookSelected} />
       <div className="flex-1 p-4">
         {text && <BookText text={text} />}
         {text && (
           <div>
-            <PageSelector totalPages={totalPages} onPageChange={handlePageChange} />
+            <PageSelector totalPages={totalPages} onPageChange={setText} bookPath={bookPath}/>
           </div>
         )}
         <AddBookButton /> 

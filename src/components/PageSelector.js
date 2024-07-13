@@ -1,12 +1,23 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 
-const PageSelector = ({ totalPages, onPageChange }) => {
-  const [currentPage, setCurrentPage] = useState(1);
-
-  const handlePageChange = (newPage) => {
+const PageSelector = ({ totalPages, onPageChange, bookPath }) => {
+  const [currentPage, setCurrentPage] = useState(0);
+  const handlePageChange = async (newPage) => {
     if (newPage >= 1 && newPage <= totalPages) {
       setCurrentPage(newPage);
-      onPageChange(newPage);
+      const backendUrl = process.env.REACT_APP_BACKEND_URL;
+      try {
+        const response = await axios.get(`${backendUrl}/flip`, {
+          params: {
+            path: bookPath,
+            page_num: newPage
+          }
+        });
+        onPageChange(response.data.text);
+      } catch (error) {
+        console.error('Error fetching page text:', error);
+      }
     }
   };
 

@@ -14,7 +14,7 @@ const Home = () => {
         </Link>
           <Link to="/signin" className="mr-4">
           <button className="text-black hover:text-gray-600">
-            Signin
+            Sign In
           </button>
         </Link>
         </div>

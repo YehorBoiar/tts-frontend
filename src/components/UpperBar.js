@@ -3,18 +3,18 @@ import { Link } from 'react-router-dom';
 
 function UpperBar() {
   return (
-    <div className="p-4 flex justify-between items-center">
+    <div className="text-black flex justify-between items-center mx-16 h-16 ">
       <h1 className="text-black text-xl font-bold">
-      <Link to="/" className="mr-4">
+        <Link to="/" className="mr-4">
           <button>
             Bebra
           </button>
-      </Link>
+        </Link>
       </h1>
       <div>
         <Link to="/signin" className="mr-4">
           <button className="text-black hover:text-gray-600">
-            Signin
+            Sign In
           </button>
         </Link>
         <Link to="/register">

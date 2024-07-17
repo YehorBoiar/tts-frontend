@@ -10,7 +10,7 @@ import Dosound from './pages/dosound';
 function App() {
   return (
     <Router>
-      <div className="p-4">
+      <div>
         <UpperBar />
           <Routes>
             <Route path="/" element={<Home />} />

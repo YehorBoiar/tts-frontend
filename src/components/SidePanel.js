@@ -1,30 +1,30 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import AddBookButton from './AddBookButton';
 
 const SidePanel = ({ setText }) => {
   const [books, setBooks] = useState([]);
-// TODO - handle the case when user is not logged in
-  useEffect(() => {
-    const fetchBooks = async () => {
-      const backendUrl = process.env.REACT_APP_BACKEND_URL;
-      const cookie = document.cookie.split(';').find(cookie => cookie.startsWith('token')).split('=')[1];
-      try {
-        const response = await axios.get(`${backendUrl}/books`, {
-          headers: {
-            'Authorization': `Bearer ${cookie}`
-          }
-        });
-        setBooks(response.data);
-      } catch (error) {
-        console.error("There was an error fetching the books:", error);
-      }
-    };
 
+  const fetchBooks = async () => {
+    const backendUrl = process.env.REACT_APP_BACKEND_URL;
+    const cookie = document.cookie.split(';').find(cookie => cookie.startsWith('token')).split('=')[1];
+    try {
+      const response = await axios.get(`${backendUrl}/books`, {
+        headers: {
+          'Authorization': `Bearer ${cookie}`
+        }
+      });
+      setBooks(response.data);
+    } catch (error) {
+      console.error("There was an error fetching the books:", error);
+    }
+  };
+
+  useEffect(() => {
     fetchBooks();
   }, []);
 
   const handleBookClick = async (path) => {
-    console.log(path);
     const backendUrl = process.env.REACT_APP_BACKEND_URL;
     const cookie = document.cookie.split(';').find(cookie => cookie.startsWith('token')).split('=')[1];
     try {
@@ -42,7 +42,7 @@ const SidePanel = ({ setText }) => {
 
   return (
     <div className="w-72 h-screen bg-gray-100 shadow-lg p-5 flex flex-col">
-      <input id="file-upload" type="file" className="hidden" accept="application/pdf" />
+      <AddBookButton onBookAdded={fetchBooks} />
       <div className="overflow-y-auto flex-1 mt-4">
         {books.map((book, index) => (
           <div key={index} className="mb-2">

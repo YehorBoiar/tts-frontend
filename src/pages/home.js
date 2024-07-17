@@ -3,24 +3,19 @@ import { Link } from 'react-router-dom';
 
 const Home = () => {
   return (
-    <div className="min-h-screen flex">
-      <main className="flex flex-col items-center justify-center text-center flex-1">
-        <h1 className="text-4xl font-bold mb-6">Make sound from pdf free no sms</h1>
-        <div className="flex">
-        <Link to="/dosound" className="mr-4">
-          <button className="text-black hover:text-gray-600">
-            Do sound
-          </button>
-        </Link>
-          <Link to="/signin" className="mr-4">
-          <button className="text-black hover:text-gray-600">
-            Sign In
-          </button>
-        </Link>
+    <div className="flex flex-grow items-center justify-center min-h-screen">
+      <div className="text-center">
+        <h1 className="text-4xl font-bold font-xl mb-4">Convert text to Audio</h1>
+        <div>
+          <Link to="/dosound" className="mr-4">
+            <button className="text-white text-base bg-black hover:bg-gray-800 px-4 py-2 rounded">
+              Do sound
+            </button>
+          </Link>
         </div>
-      </main>
+      </div>
     </div>
   );
-}
+}  
 
 export default Home;

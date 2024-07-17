@@ -1,14 +1,14 @@
 import React from 'react';
 import axios from 'axios';
 
-const AddBookButton = ({ }) => {
+const AddBookButton = ({ onBookAdded }) => {
   const fileInputRef = React.createRef();
 
   const addBook = async () => {
     const fileInput = fileInputRef.current;
     const file = fileInput.files[0];
 
-    if (!file) { 
+    if (!file) {
       alert("Please select a file first!");
       return;
     }
@@ -16,7 +16,6 @@ const AddBookButton = ({ }) => {
     const formData = new FormData();
     formData.append('pdf_file', file);
     const cookie = document.cookie.split(';').find(cookie => cookie.startsWith('token')).split('=')[1];
-    console.log(cookie);
     try {
       await axios.post(`${backendUrl}/add_book`, formData, {
         headers: {
@@ -25,7 +24,10 @@ const AddBookButton = ({ }) => {
         }
       });
 
-      fileInput.value = ''; 
+      fileInput.value = '';
+      if (onBookAdded) {
+        onBookAdded();
+      }
     } catch (error) {
       console.error("There was an error adding the book:", error);
       alert("There was an error adding the book.");
@@ -45,7 +47,7 @@ const AddBookButton = ({ }) => {
         style={{ display: 'none' }}
         onChange={addBook}
       />
-      <button onClick={handleButtonClick}>Add Book</button>
+      <button className="text-black py-2 px-4 rounded" onClick={handleButtonClick}>Add Book</button>
     </div>
   );
 };

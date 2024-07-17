@@ -10,22 +10,22 @@ const Dosound = () => {
   const [bookPath, setBookPath] = useState('');
   const { totalPages } = usePagesCount(bookPath);
 
+
   const handleBookSelected = (bookText, path) => {
     setText(bookText);
     setBookPath(path);
   };
 
   return (
-    <div className="flex">
+    <div className="h-screen flex">
       <SidePanel setText={handleBookSelected} />
-      <div className="flex-1 p-4">
+      <div className="flex-1 p-4 ml-64">
         {text && <BookText text={text} />}
         {text && (
           <div>
-            <PageSelector totalPages={totalPages} onPageChange={setText} bookPath={bookPath}/>
+            <PageSelector totalPages={totalPages} onPageChange={setText} bookPath={bookPath} />
           </div>
         )}
-        <AddBookButton /> 
       </div>
     </div>
   );

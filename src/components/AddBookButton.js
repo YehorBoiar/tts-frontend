@@ -47,7 +47,7 @@ const AddBookButton = ({ onBookAdded }) => {
         style={{ display: 'none' }}
         onChange={addBook}
       />
-      <button className="text-black py-2 px-4 rounded" onClick={handleButtonClick}>Add Book</button>
+      <button className="text-white bg-black py-2 px-4 rounded-md" onClick={handleButtonClick}>Add Book</button>
     </div>
   );
 };

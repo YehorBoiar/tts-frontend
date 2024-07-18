@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import AddBookButton from './AddBookButton';
+import BookButton from './BookButton';
 
 const SidePanel = ({ setText }) => {
   const [books, setBooks] = useState([]);
@@ -41,15 +42,13 @@ const SidePanel = ({ setText }) => {
   };
 
   return (
-    <div className="w-72 h-screen bg-gray-100 shadow-lg p-5 flex flex-col">
-      <AddBookButton onBookAdded={fetchBooks} />
-      <div className="overflow-y-auto flex-1 mt-4">
+    <div className="w-72 h-screen bg-gray-700 shadow-lg p-5 flex flex-col">
+      <div className="flex justify-center mb-4">
+        <AddBookButton onBookAdded={fetchBooks} />
+      </div>
+      <div className="overflow-y-auto flex-1">
         {books.map((book, index) => (
-          <div key={index} className="mb-2">
-            <button onClick={() => handleBookClick(book.path)} className="text-blue-500 hover:underline">
-              {book.metadata && book.metadata["/Title"] ? `${book.metadata["/Title"]} by ${book.metadata["/Author"]}` : "Unknown Book"}
-            </button>
-          </div>
+          <BookButton key={index} book={book} onClick={handleBookClick} />
         ))}
       </div>
     </div>

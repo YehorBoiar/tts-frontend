@@ -26,6 +26,7 @@ const SidePanel = ({ setText }) => {
   }, []);
 
   const handleBookClick = async (path) => {
+    console.log(path);
     const backendUrl = process.env.REACT_APP_BACKEND_URL;
     const cookie = document.cookie.split(';').find(cookie => cookie.startsWith('token')).split('=')[1];
     try {

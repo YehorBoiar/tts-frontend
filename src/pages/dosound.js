@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import BookText from '../components/BookText';
 import PageSelector from '../components/PageSelector';
 import SidePanel from '../components/SidePanel';
-import AddBookButton from '../components/AddBookButton';
 import usePagesCount from '../hooks/usePagesCount';
 
 const Dosound = () => {

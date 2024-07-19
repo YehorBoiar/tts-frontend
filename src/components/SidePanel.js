@@ -43,11 +43,11 @@ const SidePanel = ({ setText }) => {
   };
 
   return (
-    <div className="w-72 h-screen bg-gray-700 shadow-lg p-5 flex flex-col">
+    <div className="w-72 h-screen bg-gray-700 space-y-3 shadow-lg p-5 flex flex-col">
       <div className="flex justify-center mb-4">
         <AddBookButton onBookAdded={fetchBooks} />
       </div>
-      <div className="overflow-y-auto flex-1">
+      <div className="overflow-y-auto flex-1 space-y-8">
         {books.map((book, index) => (
           <BookButton key={index} book={book} onClick={handleBookClick} />
         ))}

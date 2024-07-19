@@ -19,12 +19,7 @@ const Dosound = () => {
     <div className="h-screen flex">
       <SidePanel setText={handleBookSelected} />
       <div className="flex-1 p-4 ml-64">
-        {text && <BookText text={text} />}
-        {text && (
-          <div>
-            <PageSelector totalPages={totalPages} onPageChange={setText} bookPath={bookPath} />
-          </div>
-        )}
+        {text && <BookText text={text} bookPath={bookPath}/>}
       </div>
     </div>
   );

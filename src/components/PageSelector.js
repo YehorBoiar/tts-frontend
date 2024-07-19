@@ -1,10 +1,15 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import useWebSocketTTS from '../hooks/useWebSocketTTS';
 
-const PageSelector = ({ totalPages, onPageChange, bookPath }) => {
+
+const PageSelector = ({ totalPages, bookPath, onPageTextUpdate }) => {
   const [currentPage, setCurrentPage] = useState(0);
+  const [pageText, setPageText] = useState("");
+  const { play, stop, isPlaying, error } = useWebSocketTTS(pageText);
+
   const handlePageChange = async (newPage) => {
-    if (newPage >= 1 && newPage <= totalPages) {
+    if (newPage >= 0 && newPage <= totalPages) {
       setCurrentPage(newPage);
       const backendUrl = process.env.REACT_APP_BACKEND_URL;
       try {
@@ -14,7 +19,9 @@ const PageSelector = ({ totalPages, onPageChange, bookPath }) => {
             page_num: newPage
           }
         });
-        onPageChange(response.data.text);
+        const newText = response.data.text;
+        setPageText(newText); // Set the new page text
+        onPageTextUpdate(newText); // Call the callback with the new page text
       } catch (error) {
         console.error('Error fetching page text:', error);
       }
@@ -32,7 +39,7 @@ const PageSelector = ({ totalPages, onPageChange, bookPath }) => {
           placeholder="speed"
           className="p-1 border rounded"
         />
-        <button className="p-1 border rounded bg-gray-300">
+        <button className="p-1 border rounded bg-gray-300" onClick={isPlaying ? stop : play}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -44,7 +51,7 @@ const PageSelector = ({ totalPages, onPageChange, bookPath }) => {
               strokeLinecap="round"
               strokeLinejoin="round"
               strokeWidth={2}
-              d="M14.752 11.168l-3.197-2.132a1 1 0 00-1.555.832v4.264a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"
+              d={isPlaying ? "M6 18L18 12L6 6V18Z" : "M6 6h12v12H6z"}
             />
           </svg>
         </button>
@@ -66,6 +73,7 @@ const PageSelector = ({ totalPages, onPageChange, bookPath }) => {
           &gt;
         </button>
       </div>
+      {error && <div className="text-red-500">Error: {error.message}</div>}
     </div>
   );
 };

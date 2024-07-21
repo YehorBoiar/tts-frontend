@@ -1,12 +1,9 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import useWebSocketTTS from '../hooks/useWebSocketTTS';
-
 
 const PageSelector = ({ totalPages, bookPath, onPageTextUpdate }) => {
   const [currentPage, setCurrentPage] = useState(0);
   const [pageText, setPageText] = useState("");
-  const { play, stop, isPlaying, error } = useWebSocketTTS(pageText);
 
   const handlePageChange = async (newPage) => {
     if (newPage >= 0 && newPage <= totalPages) {
@@ -39,7 +36,7 @@ const PageSelector = ({ totalPages, bookPath, onPageTextUpdate }) => {
           placeholder="speed"
           className="p-1 border rounded"
         />
-        <button className="p-1 border rounded bg-gray-300" onClick={isPlaying ? stop : play}>
+        <button className="p-1 border rounded bg-gray-300">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -51,7 +48,6 @@ const PageSelector = ({ totalPages, bookPath, onPageTextUpdate }) => {
               strokeLinecap="round"
               strokeLinejoin="round"
               strokeWidth={2}
-              d={isPlaying ? "M6 18L18 12L6 6V18Z" : "M6 6h12v12H6z"}
             />
           </svg>
         </button>
@@ -73,7 +69,6 @@ const PageSelector = ({ totalPages, bookPath, onPageTextUpdate }) => {
           &gt;
         </button>
       </div>
-      {error && <div className="text-red-500">Error: {error.message}</div>}
     </div>
   );
 };

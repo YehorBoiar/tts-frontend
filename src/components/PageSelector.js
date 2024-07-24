@@ -1,9 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
 import axios from 'axios';
+import PlayAudioButton from './PlayAudioButton';
 
-const PageSelector = ({ totalPages, bookPath, onPageTextUpdate }) => {
-  const [currentPage, setCurrentPage] = useState(0);
-  const [pageText, setPageText] = useState("");
+const PageSelector = ({ totalPages, bookPath, currentPage, onPageTextUpdate, setCurrentPage, pageText }) => {
 
   const handlePageChange = async (newPage) => {
     if (newPage >= 0 && newPage <= totalPages) {
@@ -17,7 +16,6 @@ const PageSelector = ({ totalPages, bookPath, onPageTextUpdate }) => {
           }
         });
         const newText = response.data.text;
-        setPageText(newText); // Set the new page text
         onPageTextUpdate(newText); // Call the callback with the new page text
       } catch (error) {
         console.error('Error fetching page text:', error);
@@ -27,31 +25,6 @@ const PageSelector = ({ totalPages, bookPath, onPageTextUpdate }) => {
 
   return (
     <div className="flex items-center p-2 bg-gray-200 border rounded">
-      <div className="flex items-center space-x-2">
-        <select className="p-1 border rounded">
-          <option>api</option>
-        </select>
-        <input
-          type="text"
-          placeholder="speed"
-          className="p-1 border rounded"
-        />
-        <button className="p-1 border rounded bg-gray-300">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            className="w-6 h-6"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-            />
-          </svg>
-        </button>
-      </div>
       <div className="flex items-center space-x-2 bg-gray-400 p-1 rounded">
         <button
           onClick={() => handlePageChange(currentPage - 1)}
@@ -60,7 +33,7 @@ const PageSelector = ({ totalPages, bookPath, onPageTextUpdate }) => {
           &lt;
         </button>
         <span className="text-white">
-          {currentPage} / {totalPages}
+          {currentPage+1} / {totalPages+1}
         </span>
         <button
           onClick={() => handlePageChange(currentPage + 1)}
@@ -69,6 +42,7 @@ const PageSelector = ({ totalPages, bookPath, onPageTextUpdate }) => {
           &gt;
         </button>
       </div>
+      <PlayAudioButton text={pageText} /> {/* Pass the text to PlayAudioButton */}
     </div>
   );
 };

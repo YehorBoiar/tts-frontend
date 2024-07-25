@@ -1,10 +1,12 @@
 import { useState, useRef } from 'react';
+import { getAudioContext, addToAudioQueue, audioQueue } from './audioStore';
 
 function usePlayAudio() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const audioSourceRef = useRef(null);
-  const audioContextRef = useRef(null);
+  const isPlayingRef = useRef(false);
+  const textChunksRef = useRef([]);
 
   const hexStringToArrayBuffer = (hexString) => {
     const byteArray = new Uint8Array(hexString.match(/.{1,2}/g).map(byte => parseInt(byte, 16)));
@@ -25,58 +27,78 @@ function usePlayAudio() {
     return hexStringToArrayBuffer(data.audio);
   };
 
-  const initializeAudioContext = () => {
-    if (!audioContextRef.current) {
-      audioContextRef.current = new (window.AudioContext || window.webkitAudioContext)();
-    }
-    return audioContextRef.current;
-  };
-
   const decodeAudioBuffer = async (audioContext, audioBuffer) => {
     return await audioContext.decodeAudioData(audioBuffer);
   };
 
-  const playAudio = (audioContext, buffer) => {
-    if (audioSourceRef.current) {
-      audioSourceRef.current.stop();
+  const playAudioFromQueue = async () => {
+    const audioContext = getAudioContext();
+    isPlayingRef.current = true;
+
+    while (audioQueue.length > 0) {
+      const buffer = audioQueue.shift();
+      const source = audioContext.createBufferSource();
+      source.buffer = buffer;
+      source.connect(audioContext.destination);
+      source.start(0);
+
+      if (audioSourceRef.current) {
+        audioSourceRef.current.stop();
+      }
+
+      audioSourceRef.current = source;
+
+      await new Promise((resolve) => {
+        source.onended = resolve;
+      });
+
+      if (textChunksRef.current.length > 0 && audioQueue.length < 3) {
+        const nextChunk = textChunksRef.current.shift();
+        fetchAndAddToQueue(nextChunk);
+      }
     }
 
-    const source = audioContext.createBufferSource();
-    source.buffer = buffer;
-    source.connect(audioContext.destination);
-    source.start(0);
-
-    audioSourceRef.current = source;
-
-    return new Promise((resolve) => {
-      source.onended = resolve;
-    });
+    isPlayingRef.current = false;
   };
 
-  const synthesizeSpeech = async (text) => {
-    setLoading(true);
-    setError(null);
+  const fetchAndAddToQueue = async (chunk) => {
+    const audioContext = getAudioContext();
+
     try {
-      const audioBuffer = await fetchSynthesizedSpeech(text);
-      const audioContext = initializeAudioContext();
-      const buffer = await decodeAudioBuffer(audioContext, audioBuffer);
-      await playAudio(audioContext, buffer);
+      const audioBuffer = await fetchSynthesizedSpeech(chunk);
+      const decodedBuffer = await decodeAudioBuffer(audioContext, audioBuffer);
+      addToAudioQueue(decodedBuffer);
+
+      if (!isPlayingRef.current) {
+        playAudioFromQueue();
+      }
     } catch (err) {
       setError(err.message);
-      throw err;
+    }
+  };
+
+  const synthesizeAndPlayAudio = async (textChunks) => {
+    setLoading(true);
+    setError(null);
+    textChunksRef.current = textChunks.slice(); // Copy text chunks to ref
+
+    try {
+      while (textChunksRef.current.length > 0 && audioQueue.length < 3) {
+        const chunk = textChunksRef.current.shift();
+        await fetchAndAddToQueue(chunk);
+      }
+
+      if (!isPlayingRef.current) {
+        playAudioFromQueue();
+      }
+    } catch (err) {
+      setError(err.message);
     } finally {
       setLoading(false);
     }
   };
 
-  const stopSpeech = () => {
-    if (audioSourceRef.current) {
-      audioSourceRef.current.stop();
-      audioSourceRef.current = null;
-    }
-  };
-
-  return { synthesizeSpeech, stopSpeech, loading, error };
+  return { synthesizeAndPlayAudio, loading, error };
 }
 
 export default usePlayAudio;

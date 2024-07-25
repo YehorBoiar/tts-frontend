@@ -4,22 +4,19 @@ import usePlayAudio from '../hooks/usePlayAudio';
 
 function PlayAudioButton({ text }) {
   const { textChunks, chunkText, loading: chunkLoading, error: chunkError } = useChunkText();
-  const { synthesizeSpeech, loading: synthLoading, error: synthError } = usePlayAudio();
+  const { synthesizeAndPlayAudio, loading, error } = usePlayAudio();
 
-  const handleSubmit = async (e) => {
+  
+  const handleSubmit  = async (e) => {
     e.preventDefault();
     await chunkText(text);
-    for (const chunk of textChunks) {
-      await synthesizeSpeech(chunk);
-    }
+    await synthesizeAndPlayAudio(textChunks);
   };
 
   return (
     <div>
-      <button onClick={handleSubmit} type="submit" disabled={chunkLoading || synthLoading}>
-        {chunkLoading || synthLoading ? 'Processing...' : 'Play All'}
-      </button>
-      {(chunkError || synthError) && <p style={{ color: 'red' }}>{chunkError || synthError}</p>}
+      <button onClick={handleSubmit} disabled={loading}>Synthesize and Play Audio</button>
+      {error && <p>Error: {error}</p>}
     </div>
   );
 }

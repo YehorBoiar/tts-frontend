@@ -11,15 +11,15 @@ function usePlayAudio() {
     return byteArray.buffer;
   };
 
-  const synthesizeSpeech = async (text, voiceId = 'Joanna') => {
+  const synthesizeSpeech = async (text) => {
     setLoading(true);
     setError(null);
     try {
-      const backendUrl = process.env.REACT_APP_BACKEND_URL;
+      const backendUrl = process.env.REACT_APP_TTS_URL;
       const response = await fetch(`${backendUrl}/synthesize`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text, voice_id: voiceId })
+        body: JSON.stringify({ text })
       });
       if (!response.ok) {
         throw new Error('Network response was not ok');

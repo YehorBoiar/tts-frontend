@@ -6,8 +6,7 @@ const usePagesCount = (bookPath) => {
 
   useEffect(() => {
     const fetchPagesCount = async () => {
-      if (!bookPath) return;
-    
+      console.log(bookPath);
       const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
       try {
@@ -15,7 +14,7 @@ const usePagesCount = (bookPath) => {
           params: { path: bookPath }
         });
         setTotalPages(parseInt(response.data.text, 10)-1);
-        console.log(response.data.text);
+        console.log(response);
       } catch (err) {
         console.error('Error fetching pages count:', err);
       }

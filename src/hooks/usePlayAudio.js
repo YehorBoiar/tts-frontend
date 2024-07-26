@@ -31,12 +31,26 @@ function usePlayAudio() {
   const decodeAudioBuffer = async (audioContext, audioBuffer) => {
     return await audioContext.decodeAudioData(audioBuffer);
   };
+  
+  const fetchAndAddToQueue = async (chunk) => {
+    const audioContext = getAudioContext();
+
+    try {
+      const audioBuffer = await fetchSynthesizedSpeech(chunk);
+      const decodedBuffer = await decodeAudioBuffer(audioContext, audioBuffer);
+      addToAudioQueue(decodedBuffer);
+      
+
+    } catch (err) {
+      setError(err.message);
+    }
+  };
 
   const playAudioFromQueue = async () => {
     const audioContext = getAudioContext();
     isPlayingRef.current = true;
 
-    while (audioQueue.length > 0 ) {
+    while (audioQueue.length > 0) {
       const buffer = audioQueue.shift();
       const source = audioContext.createBufferSource();
       source.buffer = buffer;
@@ -53,45 +67,25 @@ function usePlayAudio() {
         source.onended = resolve;
       });
 
-      if (textChunksRef.current.length > 0 && audioQueue.length < 3) {
-        const nextChunk = textChunksRef.current.shift();
-        fetchAndAddToQueue(nextChunk);
-      }
     }
 
     isPlayingRef.current = false;
   };
 
-  const fetchAndAddToQueue = async (chunk) => {
-    const audioContext = getAudioContext();
-
-    try {
-      const audioBuffer = await fetchSynthesizedSpeech(chunk);
-      const decodedBuffer = await decodeAudioBuffer(audioContext, audioBuffer);
-      addToAudioQueue(decodedBuffer);
-
-      if (!isPlayingRef.current) {
-        playAudioFromQueue();
-      }
-    } catch (err) {
-      setError(err.message);
-    }
-  };
 
   const synthesizeAndPlayAudio = async (textChunks) => {
     setLoading(true);
     setError(null);
-    setStopped(false); // Reset stopped state
-    textChunksRef.current = textChunks.slice(); // Copy text chunks to ref
-
+    setStopped(false); 
+    textChunksRef.current = textChunks; 
+    console.log(textChunksRef.current);
     try {
-      while (textChunksRef.current.length > 0 && audioQueue.length < 3 && !stopped) {
+      while (textChunksRef.current.length > 0 && !stopped) {
         const chunk = textChunksRef.current.shift();
         await fetchAndAddToQueue(chunk);
-      }
-
-      if (!isPlayingRef.current && !stopped) {
-        playAudioFromQueue();
+        if (!isPlayingRef.current) {
+          playAudioFromQueue();
+        }
       }
     } catch (err) {
       setError(err.message);

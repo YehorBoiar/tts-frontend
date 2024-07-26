@@ -5,7 +5,7 @@ function useChunkText() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const chunkText = async (text, chunkSize = 150) => {
+  const chunkText = async (text, chunkSize = 300) => {
     setLoading(true);
     setError(null);
     try {

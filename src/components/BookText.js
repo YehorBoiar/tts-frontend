@@ -18,6 +18,7 @@ const BookText = ({ bookPath }) => {
             page_num: currentPage
           }
         });
+        console.log(currentPage);
         const initialText = response.data.text;
         setPageText(initialText);
       } catch (error) {

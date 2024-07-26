@@ -4,6 +4,7 @@ import { getAudioContext, addToAudioQueue, audioQueue } from './audioStore';
 function usePlayAudio() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [stopped, setStopped] = useState(false);
   const audioSourceRef = useRef(null);
   const isPlayingRef = useRef(false);
   const textChunksRef = useRef([]);
@@ -35,7 +36,7 @@ function usePlayAudio() {
     const audioContext = getAudioContext();
     isPlayingRef.current = true;
 
-    while (audioQueue.length > 0) {
+    while (audioQueue.length > 0 ) {
       const buffer = audioQueue.shift();
       const source = audioContext.createBufferSource();
       source.buffer = buffer;
@@ -80,15 +81,16 @@ function usePlayAudio() {
   const synthesizeAndPlayAudio = async (textChunks) => {
     setLoading(true);
     setError(null);
+    setStopped(false); // Reset stopped state
     textChunksRef.current = textChunks.slice(); // Copy text chunks to ref
 
     try {
-      while (textChunksRef.current.length > 0 && audioQueue.length < 3) {
+      while (textChunksRef.current.length > 0 && audioQueue.length < 3 && !stopped) {
         const chunk = textChunksRef.current.shift();
         await fetchAndAddToQueue(chunk);
       }
 
-      if (!isPlayingRef.current) {
+      if (!isPlayingRef.current && !stopped) {
         playAudioFromQueue();
       }
     } catch (err) {
@@ -98,7 +100,16 @@ function usePlayAudio() {
     }
   };
 
-  return { synthesizeAndPlayAudio, loading, error };
+  const stop = () => {
+    setStopped(true);
+    if (audioSourceRef.current) {
+      audioSourceRef.current.stop();
+    }
+    textChunksRef.current = [];
+    audioQueue.length = 0;
+  };
+
+  return { synthesizeAndPlayAudio, stop, loading, error };
 }
 
 export default usePlayAudio;

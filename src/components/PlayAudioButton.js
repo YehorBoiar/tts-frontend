@@ -4,7 +4,7 @@ import usePlayAudio from '../hooks/usePlayAudio';
 
 function PlayAudioButton({ text }) {
   const { textChunks, chunkText, loading: chunkLoading, error: chunkError } = useChunkText();
-  const { synthesizeAndPlayAudio, stop, loading, error } = usePlayAudio();
+  const { synthesizeAndPlayAudio, stop, start, loading, error } = usePlayAudio();
   const [isPlaying, setIsPlaying] = useState(false);
 
   useEffect(() => {
@@ -15,7 +15,10 @@ function PlayAudioButton({ text }) {
 
   const handlePlay = async (e) => {
     e.preventDefault();
-    await chunkText(text);
+    if (textChunks.length === 0) {
+      await chunkText(text);
+    }
+    start();
     setIsPlaying(true);
   };
   const handleStop = (e) => {

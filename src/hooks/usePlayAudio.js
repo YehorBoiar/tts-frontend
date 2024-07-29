@@ -4,7 +4,7 @@ import { getAudioContext, addToAudioQueue, audioQueue } from './audioStore';
 function usePlayAudio() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [stopped, setStopped] = useState(false);
+  const stoppedRef = useRef(false);
   const audioSourceRef = useRef(null);
   const isPlayingRef = useRef(false);
   const textChunksRef = useRef([]);
@@ -76,11 +76,10 @@ function usePlayAudio() {
   const synthesizeAndPlayAudio = async (textChunks) => {
     setLoading(true);
     setError(null);
-    setStopped(false); 
     textChunksRef.current = textChunks; 
     console.log(textChunksRef.current);
     try {
-      while (textChunksRef.current.length > 0 && !stopped) {
+      while (!stoppedRef.current) {
         const chunk = textChunksRef.current.shift();
         await fetchAndAddToQueue(chunk);
         if (!isPlayingRef.current) {
@@ -95,15 +94,20 @@ function usePlayAudio() {
   };
 
   const stop = () => {
-    setStopped(true);
+    stoppedRef.current = true;
     if (audioSourceRef.current) {
       audioSourceRef.current.stop();
     }
-    textChunksRef.current = [];
-    audioQueue.length = 0;
   };
 
-  return { synthesizeAndPlayAudio, stop, loading, error };
+  const start = () => {
+    stoppedRef.current = false;
+    if (!audioSourceRef.current && audioQueue.length > 0) {
+      audioSourceRef.current.start();
+    }
+  };
+
+  return { synthesizeAndPlayAudio, stop, start, loading, error };
 }
 
 export default usePlayAudio;

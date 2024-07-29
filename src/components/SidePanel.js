@@ -29,9 +29,8 @@ const SidePanel = ({ setText }) => {
   const handleBookClick = async (path) => {
     if (path === selectedBookPath) {
       return; // Do nothing if the same book is clicked
-    }
+    }  
     setSelectedBookPath(path);
-    console.log(path);
     const backendUrl = process.env.REACT_APP_BACKEND_URL;
     const cookie = document.cookie.split(';').find(cookie => cookie.startsWith('token')).split('=')[1];
     try {

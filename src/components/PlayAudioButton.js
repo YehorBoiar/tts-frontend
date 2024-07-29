@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react';
 import useChunkText from '../hooks/useChunkText';
 import usePlayAudio from '../hooks/usePlayAudio';
 
-function PlayAudioButton({ text }) {
-  const { textChunks, chunkText, loading: chunkLoading, error: chunkError } = useChunkText();
-  const { synthesizeAndPlayAudio, stop, start, loading, error } = usePlayAudio();
+function PlayAudioButton({ text, bookPath }) {
+  const [selectedBookPath, setSelectedBookPath] = useState(null);
+  const { textChunks, chunkText, clearTextChunks, loading: chunkLoading, error: chunkError } = useChunkText();
+  const { synthesizeAndPlayAudio, stop, start, loading, error } = usePlayAudio( bookPath );
   const [isPlaying, setIsPlaying] = useState(false);
 
   useEffect(() => {
@@ -13,7 +14,17 @@ function PlayAudioButton({ text }) {
     }
   }, [textChunks, isPlaying]);
 
+  const clearChunks = ( bookPath ) => {
+    if (bookPath !== selectedBookPath ){
+      console.log('clearTextChunks');
+      clearTextChunks();
+      textChunks.length = 0;
+      setSelectedBookPath(bookPath);
+    }
+  }
+
   const handlePlay = async (e) => {
+    clearChunks( bookPath );
     e.preventDefault();
     if (textChunks.length === 0) {
       await chunkText(text);

@@ -27,7 +27,11 @@ function useChunkText() {
     }
   };
 
-  return { textChunks, chunkText, loading, error };
+  const clearTextChunks = () => {
+    setTextChunks([]);
+  };
+
+  return { textChunks, chunkText, clearTextChunks, loading, error };
 }
 
 export default useChunkText;

@@ -42,7 +42,7 @@ const PageSelector = ({ totalPages, bookPath, currentPage, onPageTextUpdate, set
           &gt;
         </button>
       </div>
-      <PlayAudioButton text={pageText} /> {/* Pass the text to PlayAudioButton */}
+      <PlayAudioButton text={pageText} bookPath={bookPath} /> {/* Pass the text to PlayAudioButton */}
     </div>
   );
 };

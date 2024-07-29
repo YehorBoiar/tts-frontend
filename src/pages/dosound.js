@@ -8,7 +8,7 @@ const Dosound = () => {
 
 
   const handleBookSelected = (bookText, path) => {
-    setText(bookText);
+    setText("text");
     setBookPath(path);
   };
 

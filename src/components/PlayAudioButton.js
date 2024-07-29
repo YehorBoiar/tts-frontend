@@ -5,7 +5,7 @@ import usePlayAudio from '../hooks/usePlayAudio';
 function PlayAudioButton({ text, bookPath }) {
   const [selectedBookPath, setSelectedBookPath] = useState(null);
   const { textChunks, chunkText, clearTextChunks, error: chunkError } = useChunkText();
-  const { synthesizeAndPlayAudio, stop, start, error } = usePlayAudio( bookPath );
+  const { synthesizeAndPlayAudio, stop, start, finishedPlaying, error } = usePlayAudio();
   const [isPlaying, setIsPlaying] = useState(false);
 
   useEffect(() => {
@@ -13,7 +13,13 @@ function PlayAudioButton({ text, bookPath }) {
       synthesizeAndPlayAudio(textChunks);
     }
   }, [textChunks, isPlaying]);
-
+  
+  useEffect(() => {
+    if (finishedPlaying) {
+      setIsPlaying(false);
+    }
+  }, [finishedPlaying]);
+  
   const clearChunks = ( bookPath ) => {
     if (bookPath !== selectedBookPath ){
       console.log('clearTextChunks');
@@ -32,7 +38,7 @@ function PlayAudioButton({ text, bookPath }) {
     start();
     setIsPlaying(true);
   };
-  
+
   const handleStop = (e) => {
     e.preventDefault();
     stop();

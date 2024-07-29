@@ -3,6 +3,7 @@ import { getAudioContext, addToAudioQueue, audioQueue } from './audioStore';
 
 function usePlayAudio() {
   const [error, setError] = useState(null);
+  const [finishedPlaying, setFinishedPlaying] = useState(false); // Add this state
   const stoppedRef = useRef(false);
   const audioSourceRef = useRef(null);
   const isPlayingRef = useRef(false);
@@ -38,8 +39,6 @@ function usePlayAudio() {
       const audioBuffer = await fetchSynthesizedSpeech(chunk);
       const decodedBuffer = await decodeAudioBuffer(audioContext, audioBuffer);
       addToAudioQueue(decodedBuffer);
-      
-
     } catch (err) {
       setError(err.message);
     }
@@ -65,16 +64,16 @@ function usePlayAudio() {
       await new Promise((resolve) => {
         source.onended = resolve;
       });
-
     }
 
     isPlayingRef.current = false;
+    setFinishedPlaying(true); // Set finishedPlaying to true when done
   };
-
 
   const synthesizeAndPlayAudio = async (textChunks) => {
     setError(null);
-    textChunksRef.current = textChunks; 
+    setFinishedPlaying(false); // Reset finishedPlaying
+    textChunksRef.current = textChunks;
     console.log(textChunksRef.current);
     try {
       while (!stoppedRef.current) {
@@ -107,7 +106,7 @@ function usePlayAudio() {
     }
   };
 
-  return { synthesizeAndPlayAudio, stop, start, error };
+  return { synthesizeAndPlayAudio, stop, start, finishedPlaying, error };
 }
 
 export default usePlayAudio;

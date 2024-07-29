@@ -4,11 +4,13 @@ import usePagesCount from '../hooks/usePagesCount';
 import PageSelector from './PageSelector';
 
 const BookText = ({ bookPath }) => {
+  const [selectedBookPath, setSelectedBookPath] = useState(null);
   const { totalPages } = usePagesCount(bookPath);
   const [pageText, setPageText] = useState("");
   const [currentPage, setCurrentPage] = useState(0);
 
   useEffect(() => {
+    handleBookChange(bookPath);
     const fetchInitialText = async () => {
       const backendUrl = process.env.REACT_APP_BACKEND_URL;
       try {
@@ -31,6 +33,14 @@ const BookText = ({ bookPath }) => {
   const handlePageTextUpdate = (text) => {
     setPageText(text);
   };
+
+  const handleBookChange = async (path) => {
+    if (path !== selectedBookPath) {
+      setSelectedBookPath(path);
+      setCurrentPage(0);
+    }
+    
+  }
 
   return (
     <div className="flex flex-col justify-center items-center h-screen">

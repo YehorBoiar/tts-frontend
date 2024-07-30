@@ -7,13 +7,22 @@ const SidePanel = ({ setText }) => {
   const [books, setBooks] = useState([]);
   const [selectedBookPath, setSelectedBookPath] = useState(null);
 
+  const getCookie = (name) => {
+    const cookie = document.cookie.split(';').find(cookie => cookie.trim().startsWith(`${name}=`));
+    return cookie ? cookie.split('=')[1] : null;
+  };
+
   const fetchBooks = async () => {
     const backendUrl = process.env.REACT_APP_BACKEND_URL;
-    const cookie = document.cookie.split(';').find(cookie => cookie.startsWith('token')).split('=')[1];
+    const token = getCookie('token');
+    if (!token) {
+      console.error("Token not found");
+      return;
+    }
     try {
       const response = await axios.get(`${backendUrl}/books`, {
         headers: {
-          'Authorization': `Bearer ${cookie}`
+          'Authorization': `Bearer ${token}`
         }
       });
       setBooks(response.data);
@@ -32,12 +41,16 @@ const SidePanel = ({ setText }) => {
     }  
     setSelectedBookPath(path);
     const backendUrl = process.env.REACT_APP_BACKEND_URL;
-    const cookie = document.cookie.split(';').find(cookie => cookie.startsWith('token')).split('=')[1];
+    const token = getCookie('token');
+    if (!token) {
+      console.error("Token not found");
+      return;
+    }
     try {
       const response = await axios.get(`${backendUrl}/get_book`, {
         params: { path },
         headers: {
-          'Authorization': `Bearer ${cookie}`
+          'Authorization': `Bearer ${token}`
         }
       });
       setText(response.data.text, path);

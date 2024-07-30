@@ -1,14 +1,12 @@
 import React, { useState } from 'react';
-import BookText from '../components/BookText';
+import TryText from '../components/TryText';
 
 const TryIt = () => {
-  const [text, setText] = useState('');
-  const [bookPath, setBookPath] = useState('');
-
+    
   return (
     <div className="h-screen flex">
       <div className="flex-1 p-4 ml-64">
-        {text && <BookText text={text} bookPath={bookPath}/>}
+        <TryText/>
       </div>
     </div>
   );

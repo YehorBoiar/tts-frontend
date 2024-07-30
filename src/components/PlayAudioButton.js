@@ -55,7 +55,10 @@ function PlayAudioButton({ text, bookPath }) {
 
   return (
     <div>
-      <button onClick={handleClick}>
+        <button 
+          onClick={handleClick} 
+          className="bg-gray-600 text-white px-2 py-1 rounded-md hover:bg-gray-700"
+        >
         {isPlaying ? 'Stop' : 'Play'}
       </button>
       {(error || chunkError) && <p>Error: {error || chunkError}</p>}

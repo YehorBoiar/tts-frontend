@@ -24,7 +24,7 @@ const PageSelector = ({ totalPages, bookPath, currentPage, onPageTextUpdate, set
   };
 
   return (
-    <div className="flex items-center p-2 bg-gray-200 border rounded">
+    <div className="flex items-center p-2 bg-gray-200 border rounded space-x-4">
       <div className="flex items-center space-x-2 bg-gray-400 p-1 rounded">
         <button
           onClick={() => handlePageChange(currentPage - 1)}

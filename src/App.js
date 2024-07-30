@@ -5,6 +5,7 @@ import Signin from './pages/signin';
 import Register from './pages/register';
 import Home from './pages/home';
 import Dosound from './pages/dosound';
+import TryIt from './pages/tryit';
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
             <Route path="/dosound" element={<Dosound />} />
             <Route path="/signin" element={<Signin />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/tryit" element={<TryIt />} />
           </Routes>
       </div>
     </Router>

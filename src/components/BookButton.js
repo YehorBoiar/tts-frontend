@@ -1,8 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import ContextMenu from './ContextMenu';
 
 const BookButton = ({ book, onClick }) => {
+  const contextMenuRef = useRef(null);
   const [imageSrc, setImageSrc] = useState(null);
-
+  const [contextMenu, setContextMenu] = useState({
+    position: { x: 0, y: 0 },
+    toggled: false
+  });
   const getImageSrc = (path) => {
     const backendUrl = process.env.REACT_APP_BACKEND_URL;
     const imageUrl = `${backendUrl}/get_image?book_path=${encodeURIComponent(path)}`;
@@ -15,6 +20,22 @@ const BookButton = ({ book, onClick }) => {
     }
   }, [book.path]);
 
+  useEffect(() => {
+    function handler(e) {
+      if(!contextMenuRef.current) return;
+      if (!contextMenuRef.current.contains(e.target)) {
+        setContextMenu({
+          position: { x: 0, y: 0 },
+          toggled: false
+        });
+      }
+    }
+
+    document.addEventListener('click', handler);
+    return () => {
+      document.removeEventListener('click', handler);
+    };
+  })
   const handleClick = () => {
     onClick(book.path);
   };
@@ -33,12 +54,42 @@ const BookButton = ({ book, onClick }) => {
     return "Unknown Book";
   };
 
+  const handleContextMenu = (e) => {
+    e.preventDefault();
+    const contextMenuAttr = contextMenuRef.current.getBoundingClientRect();
+    const isLeft = e.clientX < window.innerWidth / 2;
+    let x 
+    let y = e.clientY
+    if(isLeft){
+      x = e.clientX
+    }else{
+      x = e.clientX - contextMenuAttr.width
+    }
+
+    setContextMenu({
+      position: { x, y },
+      toggled: true
+    });
+    console.log("Context menu clicked");
+  }
+
   return (
     <div className="mb-2 bg-gray-200 flex flex-col items-center p-2 rounded-md">
-      <button onClick={handleClick} className="text-black hover:underline justify-center items-center flex flex-col">
+      <button onClick={handleClick} onContextMenu={(e) => handleContextMenu(e)} className="text-black hover:underline justify-center items-center flex flex-col">
         {renderImage()}
         {renderTitle()}
       </button>
+      <ContextMenu 
+        contextMenuRef={contextMenuRef}
+        isToggled={contextMenu.toggled}
+        positionX={contextMenu.position.x} 
+        positionY={contextMenu.position.y}
+        buttons={[
+          { text: 'Read', icon: 'icon-book', onClick: handleClick },
+          { text: 'Bookmark', icon: 'icon-bookmark', onClick: handleClick },
+          { text: 'Delete', icon: 'icon-trash', onClick: handleClick },
+        ]}
+      />
     </div>
   );
 };

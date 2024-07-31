@@ -1,7 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import ContextMenu from './ContextMenu';
+import deleteButton from '../hooks/deleteButton';
 
-const BookButton = ({ book, onClick }) => {
+const BookButton = ({ book, onClick, onDelete }) => {
+  const deleteBook = deleteButton();
   const contextMenuRef = useRef(null);
   const [imageSrc, setImageSrc] = useState(null);
   const [contextMenu, setContextMenu] = useState({
@@ -35,7 +37,8 @@ const BookButton = ({ book, onClick }) => {
     return () => {
       document.removeEventListener('click', handler);
     };
-  })
+  }, []);
+
   const handleClick = () => {
     onClick(book.path);
   };
@@ -71,7 +74,7 @@ const BookButton = ({ book, onClick }) => {
       toggled: true
     });
     console.log("Context menu clicked");
-  }
+  };
 
   return (
     <div className="mb-2 bg-gray-200 flex flex-col items-center p-2 rounded-md">
@@ -85,9 +88,7 @@ const BookButton = ({ book, onClick }) => {
         positionX={contextMenu.position.x} 
         positionY={contextMenu.position.y}
         buttons={[
-          { text: 'Read', icon: 'icon-book', onClick: handleClick },
-          { text: 'Bookmark', icon: 'icon-bookmark', onClick: handleClick },
-          { text: 'Delete', icon: 'icon-trash', onClick: handleClick },
+          { text: 'Delete', icon: 'icon-trash', onClick: () => deleteBook(book.path, onDelete) },
         ]}
       />
     </div>

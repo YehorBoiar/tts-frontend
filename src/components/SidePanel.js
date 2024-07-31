@@ -66,7 +66,7 @@ const SidePanel = ({ setText }) => {
       </div>
       <div className="overflow-y-auto flex-1 space-y-8">
         {books.map((book, index) => (
-          <BookButton key={index} book={book} onClick={handleBookClick} />
+          <BookButton key={index} book={book} onClick={handleBookClick} onDelete={fetchBooks} />
         ))}
       </div>
     </div>

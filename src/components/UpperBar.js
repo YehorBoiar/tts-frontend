@@ -1,9 +1,17 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import useAuth from '../hooks/useAuth';
+import { useAuth } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
+
 
 function UpperBar() {
   const { isAuthenticated, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate('/');
+  };
 
   return (
     <div className="text-black flex justify-between items-center mx-16 h-16 ">
@@ -16,7 +24,7 @@ function UpperBar() {
       </h1>
       <div>
         {isAuthenticated ? (
-          <button onClick={logout} className="text-black hover:text-gray-600">
+          <button onClick={handleLogout} className="text-black hover:text-gray-600">
             Logout
           </button>
         ) : (

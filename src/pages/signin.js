@@ -1,18 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
-const Login = () => {
+const Signin = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loginSuccess, setLoginSuccess] = useState(false); 
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   useEffect(() => {
     if (loginSuccess) {
-      navigate('/'); 
+      login();
+      navigate('/');
     }
-  }, [loginSuccess, navigate]);
+  }, [loginSuccess, login]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -91,4 +94,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Signin;

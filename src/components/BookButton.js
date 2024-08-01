@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import ContextMenu from './ContextMenu';
 import deleteButton from '../hooks/deleteButton';
+import TtsDropdownMenu from './TtsDropMenu';
 
 const BookButton = ({ book, onClick, onDelete }) => {
   const deleteBook = deleteButton();
@@ -77,11 +78,14 @@ const BookButton = ({ book, onClick, onDelete }) => {
   };
 
   return (
-    <div className="mb-2 bg-gray-200 flex flex-col items-center p-2 rounded-md">
+    <div className="mb-2 bg-gray-200 flex flex-col items-center p-2 rounded-md ">
       <button onClick={handleClick} onContextMenu={(e) => handleContextMenu(e)} className="text-black hover:underline justify-center items-center flex flex-col">
         {renderImage()}
         {renderTitle()}
       </button>
+      <div className="flex flex-col items-center justify-center">
+            <TtsDropdownMenu />
+      </div>
       <ContextMenu 
         contextMenuRef={contextMenuRef}
         isToggled={contextMenu.toggled}

@@ -6,8 +6,8 @@ import useTtsType from '../hooks/useTtsType';
 function PlayAudioButton({ text, bookPath }) {
   const [selectedBookPath, setSelectedBookPath] = useState(null);
   const { textChunks, chunkText, clearTextChunks, error: chunkError } = useChunkText();
-  const {ttsType, error: ttsError} = useTtsType(bookPath);
-  const { synthesizeAndPlayAudio, stop, start, finishedPlaying, error } = usePlayAudio( {tts_model: ttsType} );
+  const {ttsType, awsConfig, error: ttsError} = useTtsType(bookPath);
+  const { synthesizeAndPlayAudio, stop, start, finishedPlaying, error } = usePlayAudio( {tts_model: ttsType, awsConfig: awsConfig} );
   const [isPlaying, setIsPlaying] = useState(false);
 
   useEffect(() => {

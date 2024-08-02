@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 
 function useTtsType(bookPath) {
   const [ttsType, setTtsType] = useState(null);
+  const [awsConfig, setAwsConfig] = useState(null);
   const [error, setError] = useState(null);
 
   useEffect(() => {
@@ -14,6 +15,7 @@ function useTtsType(bookPath) {
         }
         const data = await response.json();
         setTtsType(data.name);
+        setAwsConfig(data.keys);
       } catch (error) {
         setError(error.message);
       }
@@ -22,7 +24,7 @@ function useTtsType(bookPath) {
     fetchTtsType();
   }, [bookPath]);
 
-  return { ttsType, error };
+  return { ttsType, awsConfig, error };
 }
 
 export default useTtsType;

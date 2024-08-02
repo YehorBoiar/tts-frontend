@@ -1,7 +1,7 @@
 import { useState, useRef } from 'react';
 import { getAudioContext, addToAudioQueue, audioQueue } from './audioStore';
 
-function usePlayAudio({tts_model}) {
+function usePlayAudio({tts_model, awsConfig = {}}) {
   const [error, setError] = useState(null);
   const [finishedPlaying, setFinishedPlaying] = useState(false); // Add this state
   const stoppedRef = useRef(false);
@@ -16,18 +16,28 @@ function usePlayAudio({tts_model}) {
 
   const fetchSynthesizedSpeech = async (text) => {
     const backendUrl = process.env.REACT_APP_TTS_URL;
-    const response = await fetch(`${backendUrl}/${tts_model}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ text })
-    });
+    let response;
+    if (tts_model === 'polly') {
+      response = await fetch(`${backendUrl}/polly`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text, ...awsConfig })
+      });
+    } else {
+      response = await fetch(`${backendUrl}/standard`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text })
+      });
+    }
+    
     if (!response.ok) {
       throw new Error('Network response was not ok');
     }
+  
     const data = await response.json();
     return hexStringToArrayBuffer(data.audio);
   };
-
   const decodeAudioBuffer = async (audioContext, audioBuffer) => {
     return await audioContext.decodeAudioData(audioBuffer);
   };

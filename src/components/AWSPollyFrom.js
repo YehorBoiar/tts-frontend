@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
+import useUpdateTtsModel from '../hooks/useUpdateTtsModel';
 
-const AwsPollyTTSForm = ({ closeModal }) => {
+
+const AwsPollyTTSForm = ({ closeModal, bookPath }) => {
     const [secretKey, setSecretKey] = useState('');
     const [publicKey, setPublicKey] = useState('');
     const [region, setRegion] = useState('');
+    const { updateTtsModel, loading, error, response } = useUpdateTtsModel(bookPath, { secretKey, publicKey, region });
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log('Secret Key:', secretKey);
-        console.log('Public Key:', publicKey);
-        console.log('Region:', region);
+        updateTtsModel();
     };
 
     return (
@@ -47,11 +48,13 @@ const AwsPollyTTSForm = ({ closeModal }) => {
                     />
                 </div>
                 <div className="mt-4 text-center">
-                    <button type="submit" className="bg-gray-700 text-white px-4 py-2 rounded hover:bg-gray-800">
-                        Submit
+                    <button type="submit" className="bg-gray-700 text-white px-4 py-2 rounded hover:bg-gray-800" disabled={loading}>
+                        {loading ? 'Updating...' : 'Submit'}
                     </button>
                 </div>
             </form>
+            {error && <p style={{ color: 'red' }}>Error: {error}</p>}
+            {response && <p style={{ color: 'green' }}>{response.text}</p>}
         </div>
     );
 };

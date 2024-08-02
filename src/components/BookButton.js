@@ -84,7 +84,7 @@ const BookButton = ({ book, onClick, onDelete }) => {
         {renderTitle()}
       </button>
       <div className="flex flex-col items-center justify-center">
-            <TtsDropdownMenu />
+            <TtsDropdownMenu bookPath={book.path}/>
       </div>
       <ContextMenu 
         contextMenuRef={contextMenuRef}

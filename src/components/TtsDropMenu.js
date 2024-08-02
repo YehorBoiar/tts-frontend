@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import AwsPollyTTSForm from './AWSPollyFrom';
 
 
-const TtsDropdownMenu = () => {
+const TtsDropdownMenu = ({bookPath}) => {
     const [isOpen, setIsOpen] = useState(false);
     const [showForm, setShowForm] = useState(false);
 
@@ -45,7 +45,7 @@ const TtsDropdownMenu = () => {
             )}
             {showForm && (
                 <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center z-20">
-                    <AwsPollyTTSForm closeModal={closeForm} />
+                    <AwsPollyTTSForm bookPath={bookPath} closeModal={closeForm} />
                 </div>
             )}
         </div>

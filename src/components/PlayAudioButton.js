@@ -1,13 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import useChunkText from '../hooks/useChunkText';
 import usePlayAudio from '../hooks/usePlayAudio';
+import useTtsType from '../hooks/useTtsType';
 
 function PlayAudioButton({ text, bookPath }) {
   const [selectedBookPath, setSelectedBookPath] = useState(null);
   const { textChunks, chunkText, clearTextChunks, error: chunkError } = useChunkText();
-  const { synthesizeAndPlayAudio, stop, start, finishedPlaying, error } = usePlayAudio();
+  const {ttsType, error: ttsError} = useTtsType(bookPath);
+  const { synthesizeAndPlayAudio, stop, start, finishedPlaying, error } = usePlayAudio( {tts_model: ttsType} );
   const [isPlaying, setIsPlaying] = useState(false);
 
+  useEffect(() => {
+    if (ttsError) {
+      console.error('Error fetching tts model:', ttsError);
+    }
+  }, [ttsType]);
   useEffect(() => {
     if (isPlaying && textChunks.length > 0) {
       synthesizeAndPlayAudio(textChunks);

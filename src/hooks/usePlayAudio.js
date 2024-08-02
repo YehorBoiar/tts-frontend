@@ -1,7 +1,7 @@
 import { useState, useRef } from 'react';
 import { getAudioContext, addToAudioQueue, audioQueue } from './audioStore';
 
-function usePlayAudio() {
+function usePlayAudio({tts_model}) {
   const [error, setError] = useState(null);
   const [finishedPlaying, setFinishedPlaying] = useState(false); // Add this state
   const stoppedRef = useRef(false);
@@ -16,7 +16,7 @@ function usePlayAudio() {
 
   const fetchSynthesizedSpeech = async (text) => {
     const backendUrl = process.env.REACT_APP_TTS_URL;
-    const response = await fetch(`${backendUrl}/synthesize`, {
+    const response = await fetch(`${backendUrl}/${tts_model}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ text })

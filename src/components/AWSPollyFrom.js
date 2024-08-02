@@ -6,7 +6,7 @@ const AwsPollyTTSForm = ({ closeModal, bookPath }) => {
     const [secretKey, setSecretKey] = useState('');
     const [publicKey, setPublicKey] = useState('');
     const [region, setRegion] = useState('');
-    const { updateTtsModel, loading, error, response } = useUpdateTtsModel(bookPath, { secretKey, publicKey, region });
+    const { updateTtsModel, loading, error, response } = useUpdateTtsModel(bookPath, { secretKey, publicKey, region }, 'polly');
 
     const handleSubmit = (e) => {
         e.preventDefault();

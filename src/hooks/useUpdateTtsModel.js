@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-const useUpdateTtsModel = (path, modelKeys) => {
+const useUpdateTtsModel = (path, modelKeys, model_name) => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [response, setResponse] = useState(null);
@@ -18,7 +18,7 @@ const useUpdateTtsModel = (path, modelKeys) => {
                 },
                 body: JSON.stringify({
                     path: path,
-                    model_name: 'polly',
+                    model_name: model_name,
                     model_keys: modelKeys
                 }),
             });

@@ -7,7 +7,14 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const storedAuthState = localStorage.getItem('isAuthenticated') === 'true';
-    setIsAuthenticated(storedAuthState);
+    const tokenExists = document.cookie.split('; ').find(row => row.startsWith('token=')) !== undefined;
+
+    if (storedAuthState && tokenExists) {
+      setIsAuthenticated(true);
+    } else {
+      setIsAuthenticated(false);
+      localStorage.setItem('isAuthenticated', 'false');
+    }
   }, []);
 
   const logout = () => {
